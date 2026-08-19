@@ -4,7 +4,8 @@ from pathlib import Path
 from rags.load_dspy import load_embedder
 from typing import Container, Tuple
 from dspy.retrievers import Retrieve
-
+from pathlib import Path
+ 
 class Builder:
 
     DOCS_DIR = Path(__file__).parent.parent / "docs"
@@ -92,4 +93,4 @@ class Builder:
 
 if __name__ == '__main__':
     builder = Builder()
-    builder('./rags')
+    builder(Path(__file__).parent / "rags")
