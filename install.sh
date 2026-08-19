@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 REPO_URL="https://github.com/nautechsystems/nautilus_trader.git"
-ENV_NAME="mcp"
+ENV_NAME="${ENV_NAME:-mcp}"
 
 # 1. conda env with the right Python
 CONDA_BASE="$(conda info --base)"
