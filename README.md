@@ -57,10 +57,6 @@ Both just point the client at `<conda mcp env>/bin/python3 mcp_server.py` over s
 
 ## Known limitations / TODO
 
-- [ ] Rust `hover` doesn't return the `///` doc comment separately (it comes
-      back empty) -- not a real problem today since doc comments are already
-      part of the extracted `source`, but `get_code_doc` on a Rust symbol
-      currently returns nothing useful on its own.
 - [ ] `rust-analyzer` runs without `cargo` (not installed) -- single-file
       syntax analysis only, no cross-crate type resolution. Fine for
       documentSymbol/hover on a file's own declarations, but things that need
@@ -68,13 +64,7 @@ Both just point the client at `<conda mcp env>/bin/python3 mcp_server.py` over s
 - [ ] `.code_index_cache.json` and `rags/{config.json,corpus_embeddings.npy,shape.json}`
       have no invalidation -- if `nautilus_trader/` or `docs/` change, you have
       to delete the cache files by hand and re-run to pick it up.
-- [ ] `rags/rag_build.py`'s embedding build costs a real Gemini API call
-      (~1700 chunks). `install.sh` runs it automatically on first setup with no
-      confirmation prompt -- fine for now, but worth a heads-up if this
-      script is ever handed to someone else.
 - [ ] No automated tests -- everything so far has been verified by hand
       (fresh conda env, fresh uv env, real MCP client over stdio).
 - [ ] `nautilus_trader/` is cloned from `main` (unpinned) -- can drift over
       time; nothing currently checks it against a known-good commit/tag.
-- [ ] `add_claude.sh`/`add_codex.sh` hardcode the conda `mcp` env's python
-      path; no equivalent script for a `uv`-based setup.
