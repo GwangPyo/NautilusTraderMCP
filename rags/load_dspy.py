@@ -35,8 +35,12 @@ def load_model(types: Literal['gpt', 'claude', 'gemini'],
 def load_embedder(model_name: str ='gemini-embedding-2',
             caching: bool = False
              ) ->dspy.Embedder:
-    api_key = _require_key(_KEY_NAMES["gemini"])
-    return dspy.Embedder(model=f"gemini/{model_name}", batch_size=100, caching=caching, api_key=api_key)
+    # base is gemini. pass a "provider/model" string (e.g. "openai/text-embedding-3-small")
+    # to use a different provider -- the key env var is derived from the provider.
+    provider, _, name = model_name.rpartition("/")
+    provider = provider or "gemini"
+    api_key = _require_key(_KEY_NAMES.get(provider, f"{provider.upper()}_API_KEY"))
+    return dspy.Embedder(model=f"{provider}/{name}", batch_size=100, caching=caching, api_key=api_key)
 
 
 if __name__  == '__main__':

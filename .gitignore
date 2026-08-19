@@ -17,3 +17,4 @@ rags.npz
 __pycache__/
 *.pyc
 .vscode/
+*.egg-info/

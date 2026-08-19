@@ -39,7 +39,11 @@ python3 -c "from index import CodeIndex; n = len(CodeIndex()._build_index()); pr
 
 # 7. doc RAG index -- calls the Gemini embedding API once, so skip if already built
 if [ ! -f rags/config.json ]; then
-    python3 rags/rag_build.py
+    read -r -p "Build the doc index now? This calls the Gemini embedding API (~1700 chunks). [y/N] " reply
+    case "${reply}" in
+        [yY]|[yY][eE][sS]) python3 rags/rag_build.py ;;
+        *) echo "Skipped. Run 'python3 rags/rag_build.py' later to build it." ;;
+    esac
 fi
 
 echo "Setup complete. Register the server with: ./add_claude.sh and/or ./add_codex.sh"
