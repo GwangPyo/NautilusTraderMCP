@@ -2,9 +2,11 @@ import difflib
 import json
 import subprocess
 import threading
+from concurrent.futures import TimeoutError as FutureTimeoutError
 from pathlib import Path
 
 from pylsp_jsonrpc.endpoint import Endpoint
+from pylsp_jsonrpc.exceptions import JsonRpcException
 from pylsp_jsonrpc.streams import JsonRpcStreamReader, JsonRpcStreamWriter
 
 
@@ -49,10 +51,15 @@ class _LspClient:
 
     def hover(self, path: Path, line: int, character: int) -> str:
         uri = path.resolve().as_uri()
-        result = self.endpoint.request(
-            "textDocument/hover",
-            {"textDocument": {"uri": uri}, "position": {"line": line, "character": character}},
-        ).result(timeout=30)
+        try:
+            result = self.endpoint.request(
+                "textDocument/hover",
+                {"textDocument": {"uri": uri}, "position": {"line": line, "character": character}},
+            ).result(timeout=30)
+        except (JsonRpcException, FutureTimeoutError):
+            # rust-analyzer can be mid-reindex (cargo workspace load) and reject
+            # in-flight requests with "content modified" -- just skip the doc.
+            return ""
         if not result:
             return ""
         contents = result.get("contents", "")

@@ -57,10 +57,6 @@ Both just point the client at `<conda mcp env>/bin/python3 mcp_server.py` over s
 
 ## Known limitations / TODO
 
-- [ ] `rust-analyzer` runs without `cargo` (not installed) -- single-file
-      syntax analysis only, no cross-crate type resolution. Fine for
-      documentSymbol/hover on a file's own declarations, but things that need
-      real type inference won't work.
 - [ ] `.code_index_cache.json` and `rags/{config.json,corpus_embeddings.npy,shape.json}`
       have no invalidation -- if `nautilus_trader/` or `docs/` change, you have
       to delete the cache files by hand and re-run to pick it up.

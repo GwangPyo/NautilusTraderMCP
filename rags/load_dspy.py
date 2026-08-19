@@ -45,11 +45,16 @@ def load_embedder(model_name: str ='gemini-embedding-2',
 
 if __name__  == '__main__':
     load_model('gemini', 'gemini-3.7-flash')
-    ans = dspy.Predict(dspy.Signature('question -> answer'))(question='What is the capital of France?').answer
+    ans = dspy.Predict(dspy.Signature('question -> answer'))(question='What is your name?').answer 
+    print("gemini")
+    print(ans)
+    load_embedder('openai', 'gpt-5-mini')
+    ans = dspy.Predict(dspy.Signature('question -> answer'))(question='What is your name?').answer 
+    print("openai")
+    print(ans)
 
-    
-    embedder = load_embedder(caching=True)
-    print(embedder(ans))
+
+
 
 
 
