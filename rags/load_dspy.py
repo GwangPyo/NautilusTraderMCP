@@ -5,19 +5,27 @@ import os
 from typing import Literal
 
 
+_KEY_NAMES = {"gpt": "OPENAI_API_KEY", "claude": "ANTHROPIC_API_KEY", "gemini": "GEMINI_API_KEY"}
+
+
+def _require_key(name: str) -> str:
+    dotenv.load_dotenv()
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f"{name} is not set. Add it to .env (project root) or export it before running.")
+    return value
+
+
 def load_model(types: Literal['gpt', 'claude', 'gemini'],
                model_name: str,
                max_tokens: int | None = None,
                cache: bool = True,
                callbacks: list[BaseCallback] | None = None,
                ):
-    dotenv.load_dotenv()
-    keys = {"gpt": os.environ['OPENAI_API_KEY'],
-            "claude": os.environ['ANTHROPIC_API_KEY'],
-            "gemini": os.environ['GEMINI_API_KEY']}
     prefixes = {"gpt": "openai", "claude": "anthropic", "gemini": "gemini"}
+    api_key = _require_key(_KEY_NAMES[types])
 
-    lm = dspy.LM(f"{prefixes[types]}/{model_name}", api_key=keys[types], 
+    lm = dspy.LM(f"{prefixes[types]}/{model_name}", api_key=api_key,
                  max_tokens=max_tokens, cache=cache, callbacks=callbacks,
                  )
     dspy.configure(lm=lm)
@@ -27,9 +35,8 @@ def load_model(types: Literal['gpt', 'claude', 'gemini'],
 def load_embedder(model_name: str ='gemini-embedding-2',
             caching: bool = False
              ) ->dspy.Embedder:
-    dotenv.load_dotenv()
-    return dspy.Embedder(model=f"gemini/{model_name}", batch_size=100, caching=caching,
-                          api_key=os.environ['GEMINI_API_KEY'])
+    api_key = _require_key(_KEY_NAMES["gemini"])
+    return dspy.Embedder(model=f"gemini/{model_name}", batch_size=100, caching=caching, api_key=api_key)
 
 
 if __name__  == '__main__':

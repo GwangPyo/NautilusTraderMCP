@@ -20,8 +20,8 @@ pip install -e .
 #    read it directly as text)
 [ -d nautilus_trader ] || git clone --depth 1 "${REPO_URL}" nautilus_trader
 
-# 4. docs -> ragged_docs (rag_build.py chunks/embeds everything under ragged_docs/)
-[ -d ragged_docs ] || cp -r nautilus_trader/docs ragged_docs
+# 4. docs (rag_build.py chunks/embeds everything under docs/)
+[ -d docs ] || cp -r nautilus_trader/docs docs
 
 # 5. Rust LSP (rust-analyzer) -- python-lsp-server (pylsp) already came from step 2
 if ! command -v rust-analyzer >/dev/null 2>&1; then
